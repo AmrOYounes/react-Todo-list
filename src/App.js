@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
-// import './App.css';
 import uuid from 'uuid';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Todoinput from './components/todoinput';
@@ -11,15 +9,11 @@ class App extends Component {
     items: [],
     id: uuid(),
     item: '',
-
-    editItem: false
-
   };
+
   handleChange = (e) => {
     this.setState({
       item: e.target.value
-
-
     });
   };
 
@@ -33,10 +27,8 @@ class App extends Component {
     this.setState({
       items: updatedItems,
       item: '',
-
       id: uuid(),
-      editItem: false
-    }, () => console.log(this.state));
+    });
   };
 
   clearList = () => {
@@ -44,48 +36,30 @@ class App extends Component {
       items: [],
       id: uuid(),
       item: '',
-
-      editItem: false
     });
   };
+
   handleDelete = (id) => {
     const newListItems = this.state.items.filter(item => item.id !== id);
     this.setState({
       items: newListItems
     });
   };
-  handleEdit = (id, value) => {
 
+  handleEdit = (id, value) => {
     const updateditems = this.state.items.map(item => {
-      if (item.id == id) {
-        return { ...item, title: value };
+      if (item.id === id) {
+        return Object.assign(item, { title: value })
       }
       return item;
     })
     this.setState({
       items: updateditems
     });
-
-    // const newListItems = this.state.items.filter(item => item.id !== id);
-    // const selectedvalue = this.state.items.find(item => item.id === id);
-    // console.log(selectedvalue.title);
-
-    // this.setState({
-    //   items: newListItems,
-    //   item: selectedvalue.title,
-    //   id: id,
-    //   editItem: true
-    // });
-
-
   };
 
   render() {
-
-    // console.log(this.state);
-    // console.log(this.state);
     return (
-
       <div className="container">
         <div className="row">
           <div className="col-10 mx-auto col-md-8 mt-5">
@@ -107,8 +81,6 @@ class App extends Component {
           </div>
         </div>
       </div>
-
-
     );
   }
 }

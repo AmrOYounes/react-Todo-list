@@ -5,61 +5,50 @@ export default class todoitem extends Component {
         super(props);
         this.state = {
             task: this.props.title,
-            isEditing: false
+            isEditing: true
         };
-        this.eddit = this.eddit.bind(this);
-        this.handlme = this.handlme.bind(this);
+        this.toggleTodoITEM = this.toggleTodoITEM.bind(this);
         this.updateTodo = this.updateTodo.bind(this);
     }
 
-    handlme(evt) {
+    handleEditInput = evt => {
         this.setState({
             task: evt.target.value
         });
     }
+
     updateTodo() {
         this.props.handleEdit(this.props.id, this.state.task);
         this.setState({
             isEditing: !this.state.isEditing
         });
-
     }
-    eddit() {
+
+    toggleTodoITEM() {
         this.setState({
             isEditing: !this.state.isEditing
         });
     }
+    handleDelete = () => {
+        this.props.handleDelete(this.props.id);
+    }
 
     render() {
-        const { title, handleDelete, handleEdit, id } = this.props;
-        let result;
-        if (this.state.isEditing == false) {
-            result = (
-                <li className="list-group-item text-capitalize d-flex justify-content-between my-1">
-                    <h6>{title}</h6>
-                    <div className="todo-icon">
-                        <span onClick={this.eddit} className="mx-2 text-success"> <i className="fas fa-pen"></i></span>
-                        <span onClick={handleDelete} className="mx-2 text-danger"><i className="fas fa-trash"></i></span>
+        const { title } = this.props;
+        const { isEditing } = this.state;
+        return (
+            isEditing ? <li className="list-group-item text-capitalize d-flex justify-content-between my-1">
+                <h6>{title}</h6>
+                <div className="todo-icon">
+                    <span onClick={this.toggleTodoITEM} className="mx-2 text-success"> <i className="fas fa-pen"></i></span>
+                    <span onClick={this.handleDelete} className="mx-2 text-danger"><i className="fas fa-trash"></i></span> </div></li>
 
-                    </div>
-
-                </li>
-            );
-        }
-        else {
-
-            result = (
-                <li className="list-group-item text-capitalize d-flex justify-content-between my-1">
-                    <input type="text" value={this.state.task} onChange={this.handlme} />
+                : <li className="list-group-item text-capitalize d-flex justify-content-between my-1">
+                    <input type="text" value={this.state.task} onChange={this.handleEditInput} />
                     <div className="todo-icon">
                         <span onClick={this.updateTodo} className="mx-2 text-success"><i className="fas fa-save"></i></span>
-
                     </div>
-
                 </li>
-            );
-        }
-        return result;
-
+        );
     }
 }
