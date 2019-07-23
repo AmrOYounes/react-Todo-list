@@ -1,87 +1,68 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import uuid from 'uuid';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Todoinput from './components/todoinput';
 import Todolist from './components/todolist';
+import OneInputForm from './hooks/oneInputForm';
 
-class App extends Component {
-  state = {
-    items: [],
-    id: uuid(),
-    item: '',
-  };
+function App(props) {
+  const [items, setItems] = useState([]);
+  const [id, setId] = useState(uuid());
+  const [input, handleinput, setValue] = OneInputForm('');
 
-  handleChange = (e) => {
-    this.setState({
-      item: e.target.value
-    });
-  };
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const newItem = {
-      id: this.state.id,
-      title: this.state.item
+      id: id,
+      title: input
     };
-    const updatedItems = [...this.state.items, newItem];
-    this.setState({
-      items: updatedItems,
-      item: '',
-      id: uuid(),
-    });
+    const updatedItems = [...items, newItem];
+    setItems(updatedItems);
+    setId(uuid());
+    setValue('');
   };
 
-  clearList = () => {
-    this.setState({
-      items: [],
-      id: uuid(),
-      item: '',
-    });
+  const clearList = () => {
+    setItems([]);
+    setId(uuid());
+    setValue('');
   };
 
-  handleDelete = (id) => {
-    const newListItems = this.state.items.filter(item => item.id !== id);
-    this.setState({
-      items: newListItems
-    });
+  const handleDelete = (id) => {
+    const newListItems = items.filter(item => item.id !== id);
+    setItems(newListItems);
   };
 
-  handleEdit = (id, value) => {
-    const updateditems = this.state.items.map(item => {
+  const handleEdit = (id, value) => {
+    const updateditems = items.map(item => {
       if (item.id === id) {
         return Object.assign(item, { title: value })
       }
       return item;
     })
-    this.setState({
-      items: updateditems
-    });
+    setItems(updateditems);
   };
 
-  render() {
-    return (
-      <div className="container">
-        <div className="row">
-          <div className="col-10 mx-auto col-md-8 mt-5">
-            <h3 className="text-capitalize text-center"> todo input</h3>
-            <Todoinput
-              item={this.state.item}
-              handleChange={this.handleChange}
-              handleSubmit={this.handleSubmit}
-              editItem={this.state.editItem}
-            />
-            <Todolist
-              items={this.state.items}
-              clearList={this.clearList}
-              handleDelete={this.handleDelete}
-              handleEdit={this.handleEdit}
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col-10 mx-auto col-md-8 mt-5">
+          <h3 className="text-capitalize text-center"> todo input</h3>
+          <Todoinput
+            item={input}
+            handleChange={handleinput}
+            handleSubmit={handleSubmit}
 
-            />
-
-          </div>
+          />
+          <Todolist
+            items={items}
+            clearList={clearList}
+            handleDelete={handleDelete}
+            handleEdit={handleEdit}
+          />
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 export default App;
